@@ -1,3 +1,6 @@
+import requests
+from bs4 import BeautifulSoup
+ 
 class getQuestionData:
 
     def __init__(self, url):

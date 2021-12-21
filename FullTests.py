@@ -1,3 +1,7 @@
+from HebrewChapter import Miloli
+from MathChapter import Kamuti
+from EnglishChapter import Anglit
+
 class FullTest():
     def __init__(self):
         self.Miloli = Miloli()

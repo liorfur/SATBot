@@ -1,3 +1,9 @@
+from UrlFormat import urlFormator
+from Question import Question
+import datetime
+from QuestionDataFetcher import getQuestionData
+
+
 class Perek:
     monthsAt2012 = [10, 12]
     monthsBefore2017 = [2, 4, 7, 10, 12]
@@ -15,7 +21,8 @@ class Perek:
     def createQuestions(self):
         questions  = {}
         for i in range(self.questionNum):
-            self.questions.append(Question(self.subject, i+1))
+            question = Question(self.subject, i+1)
+            self.questions.append(question)
         return questions
                 
     def convertSubject(self):
