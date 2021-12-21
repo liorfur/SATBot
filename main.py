@@ -1,0 +1,2 @@
+FullTest = FullTest()
+FullTest.runAll()
