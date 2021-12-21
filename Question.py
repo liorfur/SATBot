@@ -1,20 +1,20 @@
-class Question:
+class Question: # creates question data
         
     convertAnswer = {'1\n': '1', '1\r\n': '1', '2\n':'2', '2\r\n': '2', '3\n':'3', '3\r\n':'3', '4\n': '4', '4\r\n': '4'}
         
-    def __init__(self, subject, number):
+    def __init__(self, subject, number): # receives the details about the question 
         self.subject = subject
         self.number = number
         self.maxAnswer = 0
         self.answerSum = {'1': 0, '2': 0, '3': 0, '4': 0}
         self.inNumber = None
 
-    def getAnswer(self, year, month, perekNum, answer):
+    def getAnswer(self, year, month, perekNum, answer): # receives currect answer and adds to total sum
         converted = self.convertAnswerFromHtml(answer)
         if not converted == 0:
             self.answerSum[converted] += 1
 
-    def calcMax(self):
+    def calcMax(self):# calculates which answer is the most frequent
         sum1 = self.answerSum['1']
         sum2 = self.answerSum['2']
         sum3 = self.answerSum['3']
@@ -33,15 +33,14 @@ class Question:
             mostFrequent += " 4"
         self.maxAnswer = mostFrequent
             
-    def getAnswerSum(self):
+    def getAnswerSum(self): # returns the answer sum for said question
         return self.answerSum
             
-    def toString(self):
+    def toString(self): # returns a string with the final details
         return "For question number {num} in perek {subject} {max} \r\n {answerSum}".format(num
-            = self.number, subject = self.subject, max = self.maxAnswer, answerSum = self.answerSum)
-                
+            = self.number, subject = self.subject, max = self.maxAnswer, answerSum = self.answerSum)  
             
-    def convertAnswerFromHtml(self, answer):
+    def convertAnswerFromHtml(self, answer): # converts the form of the question recieved ffrom the HTML file
         try:
             return self.convertAnswer[answer]
         except:

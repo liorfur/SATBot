@@ -41,7 +41,7 @@ class urlFormator: #Returns the formated url to collect the question Data from
     def getYear(year): #Converts the year to the format used in The url
         return year % 2000
         
-    def formatUrl(self, perekType, perekNum, year, month):
+    def formatUrl(self, perekType, perekNum, year, month): # returns the valid form of the url if possible
         lastCharOfYear = self.getYear(year)
         formatedPerekType = self.getPerekType(perekType, month, year)
         moed = self.getMonthChars(month, lastCharOfYear)
@@ -56,7 +56,7 @@ class urlFormator: #Returns the formated url to collect the question Data from
         else:
             return url
                     
-    def validateUrl(self, perekType, perekNum, year, month):
+    def validateUrl(self, perekType, perekNum, year, month): #returns 'error' if the url is invalid
         url = self.baseUrl.format(month = month, year = year, perekType = perekType, perekNum = perekNum)
         content = requests.get(url).text
         if not content == 'Unable to connect to the site':
