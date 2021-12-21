@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
  
-class getQuestionData:
+class getQuestionData: #gets questions data from html
 
     def __init__(self, url):
         self.url = url
