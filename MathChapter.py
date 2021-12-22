@@ -1,5 +1,6 @@
-from Chapter import Perek
+from Chapter import Chapter
 
-class Kamuti(Perek):
+class MathChapter(Chapter):
+    # defines a math chapter
     def __init__(self):
         super().__init__(20, 'Kamuti - Math')

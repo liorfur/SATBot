@@ -1,66 +1,85 @@
 import requests
 from Question import Question
 
-class urlFormator: #Returns the formated url to collect the question Data from
+class UrlFormator:
+    #Returns the formated url to collect the question Data from
 
-    def __init__(self): #Defines the basic format for the url 
-        self.baseUrl = 'https://campus.geva.co.il/mobile/read/public.php?page=bhinaPS_{month}{year}_{perekType}{perekNum}.html'
-
-
-    @staticmethod
-    def getPerekType(typeOfPerek, month, year): #Converts the chapter type to the format used in the url
-        return 'perekmilulit' if typeOfPerek=='m' else \
-                   'perekkamutit' if typeOfPerek == 'k' else \
-                   'perekanglit' if typeOfPerek == 'a' else 'error'
+    def __init__(self):
+        #Defines the basic format for the url 
+        self.base_url = 'https://campus.geva.co.il/mobile/read/public.php?page=bhinaPS_{month}{year}_{chapter_type}{chapter_num}.html'
 
 
     @staticmethod
-    def getMonthChars(month, yearChar): #Converts month to the format used in the url
-        if yearChar== 12:
-            moed = 'oct' if month == 10 else 'dec' if month == 12 else 'Error'
-        elif yearChar <= 17:
-            if month == 7:
-                moed = 'july' if yearChar > 13 and yearChar < 17 else 'jul'
-            else:
-                moed = 'feb' if month == 2 else\
-                'apr' if month == 4 else\
-                'oct' if month == 10 and yearChar == 14 else\
-                'sep' if month == 10 else\
-                'dec' if month == 12 else\
-                'Error'
+    def get_chapter_type(chapter_type, month, year):
+        #Converts the chapter type to the format used in the url
+        if chapter_type == 'm':
+            return 'perekmilulit'
+        if chapter_type == 'k':
+            return 'perekkamutit'
+        if chapter_type == 'a':
+            return 'perekanglit'
+        raise Exception('Chapter type is invalid!')
+
+    @staticmethod
+    def get_month_chars(month, year_chars):
+        #Converts month to the format used in the url
+        #print(month)
+        if month == '7':
+            return UrlFormator.handle_july(year_chars)
+        elif month == '10':
+            return UrlFormator.handle_october(year_chars)
         else:
-            moed = 'apr' if month == 4 else\
-            'july' if month == 7 and yearChar == 20 else\
-            'jul' if month == 7 else\
-            'sep' if month == 9 else\
-            'dec' if month== 12 else\
-            'Error'
-        return moed
+            if month == '2':
+                return 'feb'
+            if month == '4':
+                return 'apr'
+            if month == '9':
+                return 'spt'
+            if month == '12':
+                return 'dec'
+
+            raise Exception('Unable to convert month!')
         
     @staticmethod
-    def getYear(year): #Converts the year to the format used in The url
+    def get_year_chars(year):
+        #Converts the year to the format used in The url
         return year % 2000
-        
-    def formatUrl(self, perekType, perekNum, year, month): # returns the valid form of the url if possible
-        lastCharOfYear = self.getYear(year)
-        formatedPerekType = self.getPerekType(perekType, month, year)
-        moed = self.getMonthChars(month, lastCharOfYear)
-        url = self.validateUrl(formatedPerekType, perekNum, lastCharOfYear, moed)
-        if url == 'Error':
-            if perekType == 'k':
-                formatedPerekType = 'perekkamuti'
-
-            elif perekType == 'm':
-                formatedPerekType = 'perekmiluli'
-            return self.validateUrl(formatedPerekType, perekNum, lastCharOfYear, moed)
+    
+    @staticmethod
+    def handle_july(year):
+        #handles the month of July to avoid exceptions
+        if year > 13 and year < 17 or year == 20:
+            return 'july'
+        return 'jul'
+    
+    @staticmethod
+    def handle_october(year):
+        #handles the month of October to avoid exceptions
+        if year == 14 or year == 12:
+            return 'oct'
         else:
+            return 'spt'
+        
+    def format_url(self, chapter_type, chapter_num, year, month):
+        # returns the valid form of the url if possible
+        try:
+            year_chars = self.get_year_chars(year)
+            formated_chapter_type = self.get_chapter_type(chapter_type, month, year)
+            test_date = self.get_month_chars(month, year)
+            url = self.validate_url(formated_chapter_type, chapter_num, year_chars, test_date)
             return url
+        except:
+            raise Exception('Unable to create url!')
                     
-    def validateUrl(self, perekType, perekNum, year, month): #returns 'error' if the url is invalid
-        url = self.baseUrl.format(month = month, year = year, perekType = perekType, perekNum = perekNum)
+    def validate_url(self, chapter_type, chapter_num, year, month):
+        #throws exception if the url is invalid
+        url = self.base_url.format(month = month, year = year, chapter_type = chapter_type, chapter_num = chapter_num)
         content = requests.get(url).text
         if not content == 'Unable to connect to the site':
             return url
-        return 'Error'
+        if chapter_type[-1] == "t":
+            # tries to shorten the chapter type if the url is incorrect
+            return self.validate_url(chapter_type[:-1], chapter_num, year, month)
+        raise Exception('Unable to connect to the site')
 
 
