@@ -1,5 +1,6 @@
-from Chapter import Perek
+from Chapter import Chapter
 
-class Anglit(Perek):
+class EnglishChapter(Chapter):
+    # defines an english chapter
     def __init__(self):
         super().__init__(22, 'Anglit - English')

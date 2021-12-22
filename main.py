@@ -6,5 +6,6 @@
 '''
 from FullTests import FullTest
 
-FullTest = FullTest()
-FullTest.runAll()
+if __name__ == '__main__':
+    FullTest = FullTest()
+    FullTest.run_all()
